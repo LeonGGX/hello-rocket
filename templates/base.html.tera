@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% block head %}
+<head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css"
+          href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
+    <style>
+        /* applies to all elements */
+        * {
+          box-sizing: border-box;
+        }
+
+        /* Style the body */
+        body {
+          font-family: Arial;
+          margin: 0;
+        }
+
+        /* Header/logo Title */
+        .header {
+          padding: 30px;
+          text-align: center;
+          background: #1abc9c;
+          color: white;
+        }
+
+        /* Style the top navigation bar */
+        .navbar {
+          display: flex;
+          background-color: #333;
+        }
+        /* Style the navigation bar links */
+        .navbar a {
+          color: white;
+          padding: 14px 20px;
+          text-decoration: none;
+          text-align: center;
+        }
+        /* navigation bar Change color on hover */
+        .navbar a:hover {
+          background-color: #ddd;
+          color: black;
+        }
+        /* style of the table list persons */
+        .content .list_persons {
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+        /*.content .list_genres {
+            table-layout: fixed;
+            border-collapse: collapse;
+        }*/
+        .content .list_persons tbody {
+            display: block;
+            overflow: auto;
+            height: 230px;
+            width: 100%;
+        }
+        .content .list_genres tbody {
+            display: block;
+            overflow: auto;
+            height: 230px;
+            width: 100%;
+        }
+        .content .list_persons thead tr {
+            display: block;
+            width: 100%;
+        }
+        .content .list_persons thead {
+            background: black;
+            color: #fff;
+        }
+        .content .list_genres thead {
+            background: black;
+            color: #fff;
+        }
+        .content .list_persons th,
+        .content .list_persons td {
+            border-collapse: collapse;
+            padding: 5px;
+            text-align: center;
+        }
+        .content .list_persons .btn_delete {
+            color : red;
+        }
+        .content .list_genres .btn_delete {
+            color : red;
+        }
+
+        .footer {
+           font-size: 12px;
+           position: fixed;
+           width: 100%;
+           left: 0;
+           bottom: 0;
+           background: #1abc9c;
+           color: white;
+           text-align: center;
+        }
+
+    </style>
+</head>
+{% endblock head %}
+
+<body>
+    {% block header %}
+    <!-- Header -->
+    <div class="header">
+        <h1>{{title}}</h1>
+    </div>
+    {% endblock header %}
+
+    {% block navbar %}
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="/">Start</a>
+        <a href="/persons">List Persons</a>
+        <a href="/genres">List Genres</a>
+        <a href="/partitions">List Partitions</a>
+        <a href="/logout">Deconnection</a>
+        <a href="/about">A propos</a>
+    </div>
+    {% endblock navbar %}
+
+    <div class="content">
+        {% block content %}  {% endblock content %}
+    </div>
+
+    {% block footer %}
+    <!-- Footer -->
+    <div class="footer">
+        &copy; Copyright 2020 by <a href="http://domain.invalid/">Léon GENGOUX</a>
+    </div>
+    {% endblock footer %}
+</body>
+
+</html>

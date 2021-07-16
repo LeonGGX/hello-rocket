@@ -1,0 +1,11 @@
+{% extends "base" %}
+
+{% block content %}
+<ul>
+    {% for person in persons %}
+        <li>
+            <a href="persons/{{ person.id }}">{{ person.last_name }} {{ person.first_name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

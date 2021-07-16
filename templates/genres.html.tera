@@ -1,0 +1,80 @@
+{% extends "base" %}
+{% block content %}
+<body>
+<div class="container">
+    <p><!--Nothing to see here --></p>
+    <div class="row">
+        <ul>
+            <li>
+                <form action="/genres/add" method="post">
+                    <div class="ten columns">
+                        <h5>Ajouter un Genre :
+                            <input type="text" placeholder="entrer genre ..."
+                                   name="name" id="name" value="" autofocus
+                                   class="u-full-width {% if message %}field-{{message.0}}{% endif %}" />
+                            <input type="submit" value="Ajouter">
+                        </h5>
+                    </div>
+                </form>
+            </li>
+            <li>
+                <form action="/genres/find" method="post">
+                    <h5>Chercher un genre :
+                        <input type="text" name="name" placeholder="Entrer le genre à chercher ...">
+                        <input type="submit" value="Chercher">
+                    </h5>
+                </form>
+            </li>
+            <li>
+                <h6> Message :
+                    {% if flash %}
+                    {{ flash.0 }} -- {{ flash.1 }}
+                    {% endif %}
+                    {% if message %}
+                    {{ message }}
+                    {% endif %}
+                </h6>
+
+            </li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <ul>
+            <li>
+                <h4>Liste des Genres</h4>
+                <!-- <table class="w3-table-all" id="list_name"> -->
+                <table class ="list_genres">
+                    <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for genre in genres %}
+                    <tr>
+                        <td>
+                            <form id ="form_mod" class="inline" action="/genres/{{genre.id}}" method="post">
+                                <input type="hidden" name="_method" value="put" />
+                                <input type = "text" name="name" value="{{ genre.name }}" />
+                                <button class="small" type="submit">Modifier</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form id = "form_del" class="inline" action="/genres/{{genre.id}}" method="post">
+                                <input type="hidden" name="_method" value="delete" />
+                                <button class="btn_delete" type="submit">Effacer</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+{% endblock %}

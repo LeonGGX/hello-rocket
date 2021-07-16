@@ -1,0 +1,123 @@
+{% extends "base" %}
+{% block content %}
+<body xmlns="http://www.w3.org/1999/html">
+<div class="container">
+    <p><!--Nothing to see here --></p>
+    <div class="row">
+        <ul>
+            <li>
+                <form action="/partitions/add" method="post">
+                    <div class="ten columns">
+                        <h5>Ajouter une Partition :
+                            <input type="text" placeholder="entrer titre ..."
+                                   name="title" id="title" value="" autofocus
+                                   class="u-full-width {% if message %}field-{{message.0}}{% endif %}" />
+                            <label for="musician_select">choisir musicien :</label>
+                            <select name="full_name" id="musician_select">
+                                {% for person in persons %}
+                                    <option value=" {{person.full_name}} ">
+                                        {{ person.full_name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <label for="genre_select">choisir genre :</label>
+                            <select name="name" id="genre_select">
+                                {% for genre in genres %}
+                                    <option value="{{ genre.name }}">{{ genre.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="submit" value="Ajouter">
+                        </h5>
+                    </div>
+                </form>
+            </li>
+            <li>
+                <h5>Chercher une partition :
+                    <form action="/partitions/find/title" method="post">
+                        <input type="text" name="titre" placeholder="Entrer le titre de la partition ...">
+                        <input type="submit" value="Chercher">
+                    </form>
+                    <form action="/partitions/find/author" method="post">
+                        <input type="text" name="auteur" placeholder="Entrer l'auteur ...">
+                        <input type="submit" value="Chercher">
+                    </form>
+                    <form action="/partitions/find/genre" method="post">
+                        <input type="text" name="genre" placeholder="Entrer le genre ...">
+                        <input type="submit" value="Chercher">
+                    </form>
+                </h5>
+            </li>
+            <li>
+                <h6> Message :
+                    {% if flash %}
+                    {{ flash.0 }} -- {{ flash.1 }}
+                    {% endif %}
+                    {% if message %}
+                    {{ message }}
+                    {% endif %}
+                </h6>
+
+            </li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <ul>
+            <li>
+                <h4>Liste des Partitions</h4>
+                <!-- <table class="w3-table-all" id="list_name"> -->
+                <table class ="list_partitions">
+                    <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Auteur</th>
+                        <th>Genre</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for show_partition in partitions %}
+                    <tr>
+                        <td>
+                            <form id ="form_mod" class="inline" action="/partitions/{{show_partition.id}}" method="post">
+                                <input type="hidden" name="_method" value="put" />
+                                <input type="text" name="title" value="{{ show_partition.title }}" />
+                                <select name="musiciens" id="musicians_select">
+                                    {% for person in persons %}
+                                    {% if person.full_name == show_partition.full_name  %}
+                                        <option value="{{ person.full_name }}" selected>
+                                            {{ person.full_name }} </option>
+                                    {% else %}
+                                        <option value="{{ person.full_name }}">
+                                            {{ person.full_name }} </option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <select name="genres" id="genres_select">
+                                    {% for genre in genres %}
+                                    {% if genre.name == show_partition.name %}
+                                        <option value="{{ genre.name }}" selected >{{ genre.name }}</option>
+                                    {% else %}
+                                        <option value="{{ genre.name }}" >{{ genre.name }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <button class="small" type="submit">Modifier</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form id = "form_del" class="inline" action="/partitions/{{show_partition.id}}" method="post">
+                                <input type="hidden" name="_method" value="delete" />
+                                <button class="btn_delete" type="submit">Effacer</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+{% endblock %}

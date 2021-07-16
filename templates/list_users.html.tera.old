@@ -1,0 +1,17 @@
+{% extends "base" %}
+
+{% block content %}
+<table>
+    {% for user in list_users %}
+    {% set p = user[0] %}
+    {% set u = user[1] %}
+    <tr>
+        <td>{{loop.index}}. </td>
+        <td>
+            <a href="/user/{{ p.id }}">{{ p.name }}</a>
+            <br>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
