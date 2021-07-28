@@ -74,27 +74,16 @@ pub async fn get_list_persons(conn: &DBPool) -> QueryResult<Vec<Person>> {
 // Get vector with all occurences with same name or title
 
 pub async fn get_person_by_name(conn: &DBPool, person_full_name: String) -> QueryResult<Person> {
-    let persons = conn
-        .run(move |c| {
-            persons::table
-                .filter(full_name.eq(person_full_name))
-                .first(c)
-                .expect("Error Loading Persons")
-        })
-        .await;
-    Ok(persons)
+
+    conn.run(move |c| persons::table.filter(full_name.eq(person_full_name)).first(c)).await
 }
 
 pub async fn get_genre_by_name(conn: &DBPool, genre_name: String) -> QueryResult<Genre> {
-    let genre = conn
-        .run(move |c| {
+    conn.run(move |c|
             genres::table
                 .filter(name.eq(genre_name))
-                .first::<Genre>(c)
-                .expect("Error loading Genres")
-        })
-        .await;
-    Ok(genre)
+                .first(c)
+            ).await
 }
 
 pub async fn get_partition_by_title(

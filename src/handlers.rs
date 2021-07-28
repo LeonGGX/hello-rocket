@@ -285,8 +285,8 @@ pub async fn update_partitions(
 
 #[post("/persons/find", data = "<name>")]
 pub async fn get_person_by_name(name: Form<String>, conn: DBPool) -> Template {
-    let n = name.into_inner();
 
+    let n = name.into_inner();
     match db::get_person_by_name(&conn, n).await {
         Ok(p) => {
             println!("{:?}", p);
@@ -319,11 +319,41 @@ pub async fn get_person_by_name(name: Form<String>, conn: DBPool) -> Template {
 
 #[post("/genres/find", data = "<name>")]
 pub async fn get_genre_by_type(name: Form<String>, conn: DBPool) -> Template {
-    todo!()
+
+    let name =name.into_inner();
+    match db::get_genre_by_name(&conn, name).await {
+        Ok(g) => {
+            println!("{:?}", g);
+            let mut vec_genres: Vec<Genre> = Vec::new();
+            vec_genres.push(g);
+            let flash = Some(("pas d'erreur".into(), "Genre trouvé".into()));
+
+            let context = Context {
+                flash,
+                persons: vec![],
+                genres: vec_genres,
+                title: "Genre trouvé".to_string(),
+                partitions: vec![],
+            };
+            Template::render("genres", &context)
+        }
+        Err(e) => {
+            let flash = Some(("Erreur".into(), e.to_string()));
+            let context = Context {
+                flash,
+                persons: vec![],
+                genres: vec![],
+                title: "Erreur !".to_string(),
+                partitions: vec![],
+            };
+            Template::render("persons", &context)
+        }
+    }
 }
 
 #[post("/partitions/find/title", data = "<title>")]
 pub async fn get_partition_by_title(title: Form<String>, conn: DBPool) -> Template {
+
     let title = title.into_inner();
     let persons = get_list_persons(&conn).await.unwrap();
     let genres = get_list_genres(&conn).await.unwrap();
@@ -370,6 +400,7 @@ pub async fn get_partition_by_title(title: Form<String>, conn: DBPool) -> Templa
 
 #[post("/partitions/find/author", data = "<author>")]
 pub async fn get_partition_by_author(author: Form<String>, conn: DBPool) -> Template {
+
     let persons = get_list_persons(&conn).await.unwrap();
     let genres = get_list_genres(&conn).await.unwrap();
     let author = author.into_inner();
@@ -387,6 +418,7 @@ pub async fn get_partition_by_author(author: Form<String>, conn: DBPool) -> Temp
 
 #[post("/partitions/find/genre", data = "<genre>")]
 pub async fn get_partition_by_genre(genre: Form<String>, conn: DBPool) -> Template {
+
     let persons = get_list_persons(&conn).await.unwrap();
     let genres = get_list_genres(&conn).await.unwrap();
     let genre = genre.into_inner();

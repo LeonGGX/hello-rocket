@@ -34,6 +34,7 @@ fn rocket() -> _ {
                 get_person_by_name,
                 all_genres,
                 new_genre,
+                get_genre_by_type,
                 all_partitions,
                 new_partition,
                 get_partition_by_title,
