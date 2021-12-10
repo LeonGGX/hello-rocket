@@ -8,20 +8,13 @@ edition = "2018"
 
 [dependencies]
 #rocket = { git = "https://github.com/SergioBenitez/Rocket.git", branch = "master"}
-rocket = "0.5.0-rc.1"
+rocket = "0.5.0-rc"
 serde = { version = "1.0.125", features = ["derive"] }
 serde_json = "1.0"
 diesel = { version = "1.4.6", features = ["sqlite", "postgres", "r2d2"] }
 argonautica = "0.2.0"
 dotenv = "0.15.0"
 diesel_migrations = "1.4.0"
-
-[dependencies.rocket_contrib]
-git = "https://github.com/SergioBenitez/Rocket.git"
-#version = "0.5.0-rc.1"
-branch = "master"
-default-features = false
-features = ["tera_templates"]
 
 [dependencies.rocket_sync_db_pools]
 version = "0.1.0-rc.1"
