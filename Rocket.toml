@@ -1,10 +1,6 @@
 [global]
 template_dir = "templates/"
 
-# Option 1:
-[default.databases.sqlite_database]
-url = "database/db.sqlite"
-
 [default.databases]
 persons = { url = "postgres://postgres:password@localhost/persons" }
 
