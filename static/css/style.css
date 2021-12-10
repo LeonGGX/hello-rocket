@@ -1,0 +1,127 @@
+/***********************************************************/
+        /* applies to all elements */
+        * {
+          box-sizing: border-box;
+        }
+
+        /***********************************************************/
+        /* Style the body */
+        body {
+          font-family: Arial;
+          margin: 0;
+        }
+
+        /********************************************************/
+        /* Header/logo Title */
+        .header {
+          padding: 20px;
+          text-align: center;
+          background: #1abc9c;
+          color: white;
+        }
+
+        /*******************************************************/
+        /* Style the top navigation bar */
+        .navbar {
+          display: flex;
+          background-color: #333;
+        }
+        /* Style the navigation bar links */
+        .navbar a {
+          color: white;
+          padding: 14px 20px;
+          text-decoration: none;
+          text-align: center;
+        }
+        /* navigation bar Change color on hover */
+        .navbar a:hover {
+          background-color: #ddd;
+          color: black;
+        }
+
+        /*******************************************************/
+        /* style of the table list persons */
+        .content .list_persons {
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+        .content .list_persons thead {
+            display: block;
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: middle;
+            background: black;
+            color: #fff;
+            font-style: italic;
+            width: 100%;
+        }
+        .content .list_persons tbody {
+            display: block;
+            overflow-y: scroll;
+            max-height: 300px;
+        }
+        .content .list_persons tr:nth-child(even) {background-color: #f2f2f2;}
+        .content .list_persons .btn_delete {
+            color : red;
+        }
+        .content .list_persons thead, tbody, tr {
+            display: table;
+        }
+
+        /*******************************************************/
+        /* style of the table list genres */
+        .content .list_genres {
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+        .content .list_genres thead {
+            background: black;
+            color: #fff;
+        }
+        .content .list_genres tbody {
+            display: block;
+            overflow: auto;
+            height: 230px;
+            /*width: 100%;*/
+        }
+        .content .list_genres .btn_delete {
+            color : red;
+        }
+
+        /*******************************************************/
+        /* style of the table list partitions */
+
+        .content .list_partitions {
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+        .content .list_partitions thead {
+            background: black;
+            color: #fff;
+        }
+        .content .list_partitions tbody {
+            display: block;
+            overflow: auto;
+            height: 230px;
+            width: 100%;
+        }
+        .content .musicians_select {
+            color: blue;
+            /*display: block;*/
+        }
+        .content .list_partitions .btn_delete {
+            color: red;
+        }
+
+        /*******************************************************/
+        /* style of footer */
+        .footer {
+           font-size: 12px;
+           position: fixed;
+           width: 100%;
+           left: 0;
+           bottom: 0;
+           background: #1abc9c;
+           color: white;
+           text-align: center;
+        }
