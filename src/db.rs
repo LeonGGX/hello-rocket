@@ -1,16 +1,15 @@
 use self::diesel::prelude::*;
-use diesel::sql_query;
 use rocket_sync_db_pools::diesel;
 
 use crate::models::{Genre, Partition, Person, ShowPartition};
 
 use crate::schema::genres::columns::name;
 use crate::schema::persons::columns::full_name;
+use crate::schema::partitions::columns::title;
 use crate::schema::{genres, partitions, persons};
 
-use crate::schema::partitions::columns::title;
-use crate::schema::partitions::dsl::id;
 use crate::DBPool;
+
 
 // ***********************************************************************************************
 // LISTS
@@ -56,7 +55,6 @@ pub async fn get_list_show_partitions(conn: &DBPool) -> QueryResult<Vec<ShowPart
                 .expect("error")
         })
         .await;
-    println!("{:?}", data);
     Ok(data)
 }
 
@@ -74,8 +72,11 @@ pub async fn get_list_persons(conn: &DBPool) -> QueryResult<Vec<Person>> {
 // Get vector with all occurences with same name or title
 
 pub async fn get_person_by_name(conn: &DBPool, person_full_name: String) -> QueryResult<Person> {
-
-    conn.run(move |c| persons::table.filter(full_name.eq(person_full_name)).first(c)).await
+    conn.run(move |c|
+        persons::table
+            .filter(full_name.eq(person_full_name))
+            .first(c)
+    ).await
 }
 
 pub async fn get_genre_by_name(conn: &DBPool, genre_name: String) -> QueryResult<Genre> {
@@ -86,27 +87,57 @@ pub async fn get_genre_by_name(conn: &DBPool, genre_name: String) -> QueryResult
             ).await
 }
 
+pub async fn get_raw_partition_by_title(conn: &DBPool, partition_title: String) -> QueryResult<Partition> {
+    conn.run(move |c|
+        partitions::table
+            .filter(title.eq(partition_title))
+            .first(c)
+    ).await
+}
+
 pub async fn get_partition_by_title(
     conn: &DBPool,
     partition_title: String,
 ) -> QueryResult<ShowPartition> {
-    let data = conn
-        .run(|c| {
-            partitions::table
-                .inner_join(persons::table)
-                .inner_join(genres::table)
-                .select((
-                    partitions::id,
-                    partitions::title,
-                    persons::full_name,
-                    genres::name,
-                ))
-                .filter(partitions::title.eq(partition_title))
-                .first(c)
-                .expect("error")
-        })
-        .await;
+
+    let raw_partition = get_raw_partition_by_title(conn, partition_title.clone()).await;
+    match raw_partition {
+        Ok(..) => {
+           let data = conn.run(|c| {
+                partitions::table
+                    .inner_join(persons::table)
+                    .inner_join(genres::table)
+                    .select((
+                        partitions::id,
+                        partitions::title,
+                        persons::full_name,
+                        genres::name,
+                    ))
+                    .filter(partitions::title.eq(partition_title))
+                    .first(c)
+                    .expect("error")
+            }).await;
+            Ok(data)
+        }
+        Err(e) => Err(e)
+    }
+    /*
+    let data = conn.run(|c| {
+        partitions::table
+            .inner_join(persons::table)
+            .inner_join(genres::table)
+            .select((
+                partitions::id,
+                partitions::title,
+                persons::full_name,
+                genres::name,
+            ))
+            .filter(partitions::title.eq(partition_title))
+            .first(c)
+            .expect("error")
+    }).await;
     Ok(data)
+     */
 }
 
 pub async fn get_partition_by_author(
