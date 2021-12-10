@@ -8,7 +8,7 @@ use rocket::Request;
 use rocket_dyn_templates::Template;
 
 use crate::db::{get_list_genres, get_list_persons};
-use crate::models::{Genre, Partition, Person, ShowPartition};
+use crate::models::{Genre, Person, ShowPartition, Partition};
 use crate::{db, DBPool};
 
 // Context : pour affichage général
@@ -159,7 +159,19 @@ pub async fn delete_person(id: i32, conn: DBPool) -> Result<Flash<Redirect>, Tem
 
 #[delete("/genres/<id>")]
 pub async fn delete_genre(id: i32, conn: DBPool) -> Result<Flash<Redirect>, Template> {
-    unimplemented!()
+   match db::delete_one_genre(&conn, id).await{
+       Ok(_) => Ok(Flash::success(
+           Redirect::to("/genres"),
+           "Genre successfully deleted",
+       )),
+       Err(e) => {
+           error_!("DB deletion({}) error: {}", id, e);
+           Err(Template::render(
+               "genres",
+               Context::err(&conn, "Failed to delete genre.").await,
+           ))
+       }
+   }
 }
 
 #[delete("/partitions/<id>")]
@@ -267,16 +279,36 @@ pub async fn update_person(id: i32, person_form: Form<Person>, conn: DBPool) -> 
 
 #[put("/genres/<id>", data = "<genre_form>")]
 pub async fn update_genre(id: i32, genre_form: Form<Genre>, conn: DBPool) -> Flash<Redirect> {
-    todo!()
+    let genre = genre_form.into_inner();
+    println!("{:?}", genre);
+
+    db::update_genre(id, genre, &conn).await.unwrap();
+    Flash::success(Redirect::to("/genres"), "Genre successfully modified.")
 }
 
 #[put("/partitions/<id>", data = "<show_partition_form>")]
-pub async fn update_partitions(
+pub async fn update_partition(
     id: i32,
     show_partition_form: Form<ShowPartition>,
     conn: DBPool,
 ) -> Flash<Redirect> {
-    todo!()
+    let show_partition = show_partition_form.into_inner();
+
+    let partition_id = id;
+    let musician = db::get_person_by_name(&conn, show_partition.full_name).await.unwrap();
+    let musician_id = musician.id.unwrap();
+    let genre = db::get_genre_by_name(&conn, show_partition.name).await.unwrap();
+    let genre_id = genre.id.unwrap();
+
+    let partition = Partition {
+        id: Some(partition_id),
+        person_id: musician_id,
+        title: show_partition.title,
+        genre_id,
+    };
+    println!("{:?}", partition);
+    db::update_partition(id, partition, &conn).await.unwrap();
+    Flash::success(Redirect::to("/partitions"), "Partition successfully modified.")
 }
 
 //*************************************************************************************************
